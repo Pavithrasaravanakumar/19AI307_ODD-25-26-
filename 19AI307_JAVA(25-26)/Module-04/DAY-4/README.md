@@ -1,37 +1,37 @@
-# Ex.No:4(E) DESIGN PATTERN  ---- BEHAVIOUR PATTERN
+# Ex.No:4(D) DESIGN PATTERN -- ABSTRACT FACTORY
 
 ## QUESTION:
 
-Simulate a fan speed controller using the **State Pattern**. Each time the user types **"next"**, change fan speed in the order:
-**Off → Low → Medium → High → Off**.
+Create animals from two regions: **"Africa"** and **"Asia"**. Use the **Abstract Factory Pattern** to create families of animals (Herbivore, Carnivore). Print the interaction result.
 
 ### Example
 
-| **Input**    | **Result**    |
-| ------------ | ------------- |
-| next<br>exit | Fan is on Low |
+| **Input** | **Result**           |
+| --------- | -------------------- |
+| africa    | Lion eats Wildebeest |
 
 ## AIM:
 
-To write a Java program that implements the State Design Pattern to simulate a fan speed controller that cycles through multiple states (Off, Low, Medium, High) based on user input.
+To write a Java program that implements the Abstract Factory Design Pattern to create related animal objects (Herbivore and Carnivore) from different regions and demonstrate their interaction.
 
 ## ALGORITHM :
 
 1. Start the program.
 2. Import the necessary package `java.util`.
-3. Create a `FanState` interface with methods `next()` and `printState()`.
-4. Implement concrete state classes: OffState, LowState, MediumState, HighState.
-5. Create a `Fan` class that maintains the current state.
-6. Read user input and transition to the next state when "next" is entered.
-7. Stop the program when "exit" is entered.
+3. Create interfaces for Herbivore and Carnivore.
+4. Implement concrete classes for African and Asian animals.
+5. Create an AnimalFactory interface and concrete factories for Africa and Asia.
+6. Read the region from user input and instantiate the appropriate factory.
+7. Use the factory to create animals and print the interaction.
+8. End the program.
 
 ## PROGRAM:
 
 ```
 /*
-Program to implement a Behaviour Pattern using Java
-Developed by:Pavithra S
-RegisterNumber:  212223220073
+Program to implement a Abstract Factory Pattern using Java
+Developed by:  Pavithra S 
+RegisterNumber: 212223220073
 */
 ```
 
@@ -40,83 +40,76 @@ RegisterNumber:  212223220073
 ```
 import java.util.Scanner;
 
-interface FanState {
-    void next(Fan fan);
-    void printState();
+interface Herbivore {}
+interface Carnivore {
+    void eat(Herbivore h);
+}
+
+class Wildebeest implements Herbivore {}
+
+class Lion implements Carnivore {
+    public void eat(Herbivore h) {
+        System.out.println("Lion eats Wildebeest");
+    }
+}
+
+class Buffalo implements Herbivore {}
+
+class Tiger implements Carnivore {
+    public void eat(Herbivore h) {
+        System.out.println("Tiger eats Buffalo");
+    }
+}
+
+interface AnimalFactory {
+    Carnivore createCarnivore();
+    Herbivore createHerbivore();
+}
+
+class AfricaFactory implements AnimalFactory {
+    public Carnivore createCarnivore() {
+        return new Lion();
+    }
+    
+    public Herbivore createHerbivore() {
+        return new Wildebeest();
+    }
+}
+
+class AsiaFactory implements AnimalFactory {
+    public Carnivore createCarnivore() {
+        return new Tiger();
+    }
+    
+    public Herbivore createHerbivore() {
+        return new Buffalo();
+    }
 }
 
 // write your code here
-
-class OffState implements FanState {
-    public void next(Fan fan) {
-        fan.setState(new LowState());
-    }
-    public void printState() {
-        System.out.println("Fan is Off");
-    }
-}
-
-class LowState implements FanState {
-    public void next(Fan fan) {
-        fan.setState(new MediumState());
-    }
-    public void printState() {
-        System.out.println("Fan is on Low");
-    }
-}
-
-class MediumState implements FanState {
-    public void next(Fan fan) {
-        fan.setState(new HighState());
-    }
-    public void printState() {
-        System.out.println("Fan is on Medium");
-    }
-}
-
-class HighState implements FanState {
-    public void next(Fan fan) {
-        fan.setState(new OffState());
-    }
-    public void printState() {
-        System.out.println("Fan is on High");
-    }
-}
-
-class Fan {
-    private FanState state;
-    
-    Fan() {
-        this.state = new OffState();
-    }
-    
-    public void setState(FanState state) {
-        this.state = state;
-    }
-    
-    public void pressButton() {
-        state.next(this);
-        state.printState();
-    }
-}
-
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Fan fan = new Fan();
-        while (true) {
-            String input = scanner.nextLine();
-            if (input.equalsIgnoreCase("exit")) break;
-            if (input.equalsIgnoreCase("next")) fan.pressButton();
+        Scanner sc = new Scanner(System.in);
+        String region = sc.nextLine().toLowerCase();
+        AnimalFactory factory;
+
+        if (region.equals("africa")) factory = new AfricaFactory();
+        else if (region.equals("asia")) factory = new AsiaFactory();
+        else {
+            System.out.println("Invalid region");
+            return;
         }
+
+        Carnivore carn = factory.createCarnivore();
+        Herbivore herb = factory.createHerbivore();
+        carn.eat(herb);
     }
 }
 ```
 
 ## OUTPUT:
-<img width="586" height="417" alt="Screenshot 2025-11-24 at 2 04 46 PM" src="https://github.com/user-attachments/assets/5ef69194-ce9c-4878-b677-dcbb40e16b51" />
+<img width="596" height="300" alt="Screenshot 2025-11-24 at 2 02 58 PM" src="https://github.com/user-attachments/assets/34c09671-c288-4750-adcd-62a29e3045cf" />
 
 ## RESULT:
 
-Thus, the Java program implementing the Behavioural State Pattern for simulating a fan controller was executed successfully.
-
+Thus, the Java program implementing the Abstract Factory Design Pattern for creating region-based animal families was executed successfully.
